@@ -102,8 +102,8 @@ MEDIA_URL = env.str("REPKS_MEDIA_URL", default="/m/")
 MEDIA_ROOT = env.str("REPKS_MEDIA_ROOT", rel("..", "..", "public", "media"))
 FILE_UPLOAD_PERMISSIONS = 0o644
 
-# TODO: change to some smtp server (gmail mb)
-EMAIL_BACKEND = env.str("REPKS_EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = env.str("REPKS_EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
 if EMAIL_BACKEND == "django.core.mail.backends.smtp.EmailBackend":  # pragma: no cover
     EMAIL_HOST = env.str("REPKS_EMAIL_HOST")
     EMAIL_PORT = env.str("REPKS_EMAIL_PORT")
