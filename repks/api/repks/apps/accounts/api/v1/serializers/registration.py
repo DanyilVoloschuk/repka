@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from repks.apps.accounts.exceptions import InvalidPasswordError
 from repks.apps.accounts.models import UserAccount
 from repks.apps.accounts.services.password import PasswordService
+from repks.apps.accounts.tasks import send_mail_task
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -39,4 +40,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         raw_password = self.validated_data.get("password")
         self.instance.set_password(raw_password)
         self.instance.save()
+
+        send_mail_task.delay(
+            all_recipients=[self.instance.email],
+            text='thx for joining our team, you are registered'
+        )
+
         return self.instance

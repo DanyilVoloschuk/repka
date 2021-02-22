@@ -11,6 +11,7 @@ from repks.apps.accounts.exceptions import (
     WrongPasswordError,
 )
 from repks.apps.accounts.models import UserAccount
+from repks.apps.accounts.tasks import send_mail_task
 
 
 class PasswordService:
@@ -18,6 +19,10 @@ class PasswordService:
     def change_password(user: UserAccount, new_password: str) -> None:
         user.set_password(new_password)
         user.save(update_fields=("password",))
+        send_mail_task.delay(
+            all_recipients=[user.email],
+            text=f'Hi, {user.get_full_name()}! your password was changed'
+        )
 
     @staticmethod
     def check_password(user: UserAccount, password: str) -> None:
